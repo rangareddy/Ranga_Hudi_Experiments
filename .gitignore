@@ -1,3 +1,9 @@
+**/.DS_Store
+target/
+metastore_db/
+dependency-reduced-pom.xml
 target
 *.iml
+*.log
+.DS_Store
 .idea
