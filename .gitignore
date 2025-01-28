@@ -2,7 +2,7 @@
 target/
 metastore_db/
 dependency-reduced-pom.xml
-target
+spark-warehouse
 *.iml
 *.log
 .DS_Store
