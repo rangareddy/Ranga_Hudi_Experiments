@@ -63,10 +63,10 @@ object RandomDataPayload {
     val record = new GenericData.Record(RandomDataSchema)
     record.put("id", payload.id)
     record.put("field1", payload.field1)
-    record.put("field2", payload.field1)
-    record.put("field3", payload.field1)
-    record.put("field4", payload.field1)
-    record.put("field5", payload.field1)
+    record.put("field2", payload.field2)
+    record.put("field3", payload.field3)
+    record.put("field4", payload.field4)
+    record.put("field5", payload.field5)
     record.put("ts", payload.ts)
     record.put("partition", payload.partition)
     record.put("fruits", payload.fruits)
@@ -88,3 +88,4 @@ object RandomDataPayload {
   }
 
 }
+

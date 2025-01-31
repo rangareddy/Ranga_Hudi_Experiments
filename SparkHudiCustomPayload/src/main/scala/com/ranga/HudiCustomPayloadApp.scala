@@ -12,7 +12,7 @@ import org.apache.spark.sql.SparkSession
 import scala.util.Random
 
 object HudiCustomPayloadApp extends App {
-  var inputRange = 1000L
+  var inputRange = 10000L
   if (args.length > 1) {
     inputRange = args(1).toLong
   }
