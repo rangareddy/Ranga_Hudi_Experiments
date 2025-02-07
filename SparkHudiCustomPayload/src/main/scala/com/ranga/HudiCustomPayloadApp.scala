@@ -12,27 +12,20 @@ import org.apache.spark.sql.SparkSession
 import scala.util.Random
 
 object HudiCustomPayloadApp extends App {
-  var inputRange = 10000L
-  if (args.length > 1) {
-    inputRange = args(1).toLong
-  }
+
   val name = this.getClass.getSimpleName.replace("$", "")
   val sparkConf = new SparkConf().setAppName(name).setIfMissing("spark.master", "local[*]")
 
   val spark = SparkSession.builder.appName(name).config(sparkConf)
     .config("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
-    .config("spark.sql.extensions", "org.apache.spark.sql.hudi.HoodieSparkSessionExtension")
     .config("spark.sql.hive.convertMetastoreParquet", "false")
-    .config("spark.driver.memory","20g")
-    .config("spark.executor.memory","20g")
     .getOrCreate()
 
-  val partitions = List("One", "Two", "Three", "Four")
-
+  val rangeData = 10000000L
   import spark.implicits._
   val randomData = spark
-    .range(1, 10 * inputRange)
-    .map(f => RandomData(id = f, partition = Random.shuffle(partitions).head, fruits = "apple"))
+    .range(1, 10 * rangeData)
+    .map(f => RandomData(id = f, partition = Random.shuffle(List("One", "Two", "Three", "Four")).head, fruits = "apple"))
 
   val tableName = "randomDataWithFruits"
 
@@ -51,10 +44,12 @@ object HudiCustomPayloadApp extends App {
     "hoodie.datasource.write.recordkey.field" -> "id",
     "hoodie.datasource.write.precombine.field" -> "ts",
     "hoodie.table.name" -> tableName,
-    DataSourceWriteOptions.KEYGENERATOR_CLASS_NAME.key() -> classOf[SimpleKeyGenerator].getName
+    DataSourceWriteOptions.KEYGENERATOR_CLASS_NAME.key() -> classOf[SimpleKeyGenerator].getName,
+    "hoodie.write.markers.type" -> "DIRECT",
+    "hoodie.embed.timeline.server" -> "false"
   )
 
-  val basePath = f"/tmp/hudi/$tableName"
+  val basePath = f"/tmp/$tableName"
   println(s"Inserting data to the path $basePath")
   randomData.repartition(100).write.format("hudi").options(insertOptions).mode(Overwrite).save(basePath)
   println("Data Inserted successfully")
@@ -69,7 +64,8 @@ object HudiCustomPayloadApp extends App {
     "hoodie.datasource.write.payload.class" -> classOf[RandomDataPayload].getName,
     "hoodie.upsert.shuffle.parallelism" -> "2000"
   )
+
   updateParcel.write.format("hudi").mode("append").options(randomDataUpsertOptions).save(basePath)
-  println("Data Updated successfully")
+  println(f"Data Updated successfully... Input Range: ${rangeData}")
   spark.stop()
 }

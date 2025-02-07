@@ -13,11 +13,11 @@
     <maven.compiler.source>${java.version}</maven.compiler.source>
     <maven.compiler.target>${java.version}</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <spark.version>3.5.1</spark.version>
-    <spark.major.version>3.5</spark.major.version>
+    <spark.version>3.4.1</spark.version>
+    <spark.major.version>3.4</spark.major.version>
     <scala.version>2.12.18</scala.version>
     <scala.binary.version>2.12</scala.binary.version>
-    <hudi.version>0.15.0</hudi.version>
+    <hudi.version>0.14.0</hudi.version>
     <maven-shade-plugin.version>3.5.0</maven-shade-plugin.version>
     <junit.version>4.13.2</junit.version>
     <scala-maven-plugin.version>4.9.0</scala-maven-plugin.version>
@@ -28,18 +28,21 @@
       <groupId>org.apache.spark</groupId>
       <artifactId>spark-sql_${scala.binary.version}</artifactId>
       <version>${spark.version}</version>
+      <scope>provided</scope>
     </dependency>
 
     <dependency>
       <groupId>org.apache.hudi</groupId>
       <artifactId>hudi-spark${spark.major.version}-bundle_${scala.binary.version}</artifactId>
       <version>${hudi.version}</version>
+      <scope>provided</scope>
     </dependency>
 
     <dependency>
       <groupId>org.scala-lang</groupId>
       <artifactId>scala-library</artifactId>
       <version>${scala.version}</version>
+      <scope>provided</scope>
     </dependency>
 
     <dependency>
